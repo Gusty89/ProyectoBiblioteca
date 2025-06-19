@@ -1,0 +1,3 @@
+DROP IF EXISTS DATABASE proyectodb;
+
+CREATE DATABASE proyectodb;

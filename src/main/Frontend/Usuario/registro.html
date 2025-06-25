@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Usuario</title>
+  <link rel="stylesheet" href="registro.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Registro de Usuario</h2>
+    <form id="formRegistro">
+      <input type="text" id="nombre" placeholder="Nombre" required class="formbold-form-input">
+      <input type="text" id="apellido" placeholder="Apellido" required class="formbold-form-input">
+      <input type="text" id="direccion" placeholder="Dirección" required class="formbold-form-input">
+      <input type="tel" id="telefono" placeholder="Teléfono" required class="formbold-form-input">
+      <input type="email" id="email" placeholder="Correo electrónico" required class="formbold-form-input">
+      <input type="password" id="password" placeholder="Contraseña" required class="formbold-form-input">
+      <input type="date" id="fechaRegistro" required class="formbold-form-input">
+      <button class="formbold-btn" type="submit">Registrarse</button>
+    </form>
+    <div id="resultado"></div>
+    <p>¿Ya tienes una cuenta? <a href="login.html">Iniciar sesión</a></p>
+  </div>
+
+  <script type="module" src="registro.js"></script>
+</body>
+</html>

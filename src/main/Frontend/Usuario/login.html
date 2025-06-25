@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Iniciar Sesión</title>
+  <link rel="stylesheet" href="login.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>Iniciar Sesión</h2>
+    <form id="formLogin">
+      <input type="email" id="loginEmail" placeholder="Correo electrónico" required class="formbold-form-input" />
+      <input type="password" id="loginPassword" placeholder="Contraseña" required class="formbold-form-input" />
+      <button type="submit" class="formbold-btn">Ingresar</button>
+    </form>
+    <div id="resultado"></div>
+    <p>¿No tenés una cuenta? <a href="registro.html">Registrate</a></p>
+  </div>
+
+  <script type="module" src="login.js"></script>
+</body>
+</html>

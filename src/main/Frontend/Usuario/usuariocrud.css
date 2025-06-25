@@ -1,0 +1,80 @@
+#formBuscar {
+  display: flex;
+  text-align: left;
+  justify-content: left;
+  
+  gap: 5px;
+  margin-top: 20px;
+}
+
+#formBuscar input.formbold-form-input {
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1em;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+#formBuscar input.formbold-form-input:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+  outline: none;
+}
+
+#formBuscar .formbold-btn {
+  padding: 12px;
+  background-color: #3498db;
+  color: white;
+  font-size: 1.1em;
+  text-align: left;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#formBuscar .formbold-btn:hover {
+  background-color: #2980b9;
+}
+
+
+
+.user-card-container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.user-card {
+  display: flex;
+  gap: 20px;
+  padding: 25px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  align-items: center;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-info h3 {
+  margin: 0 0 10px;
+  color: #2c3e50;
+}
+
+.user-info p {
+  margin: 6px 0;
+  font-size: 0.95em;
+  color: #444;
+}
+
+.error-message {
+  color: #e74c3c;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 20px;
+}

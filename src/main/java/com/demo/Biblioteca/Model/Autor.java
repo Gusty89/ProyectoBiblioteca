@@ -1,46 +1,47 @@
 package com.demo.Biblioteca.Model;
 
-import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+
 
 @Entity
 public class Autor {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="autor_id", nullable=false)
-    private int id;
-    @Column(name="Nombre", nullable=false, length=50)
+    private Long id;
+    @Column(name="nombre", nullable=false, length=50)
     private String nombre;
-    @Column(name="Apellido", nullable=false, length=50)
+    @Column(name="apellido", nullable=false, length=50)
     private String apellido;
-    @Column(name="Nacimiento", nullable=false, length=10)
-    private LocalDate fechaNacimiento;
-    @Column(name="Nacionalidad")
-    private String nacionalidad;
+
+    //Un autor puede haber escrito varios libros
+    @ManyToMany(mappedBy = "autores")
+    private List<Libro> libros;//FK de la tabla libro, es una relación bidireccional
 
     public Autor() {
     }
 
-    public Autor(int id, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad) {
-        this.id= id;
+    public Autor(Long id, String nombre, String apellido, List<Libro> libros) {
+        this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.fechaNacimiento = fechaNacimiento;
-        this.nacionalidad = nacionalidad;
+        this.libros = libros;
     }
 
     // Getters y Setters
     
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -60,21 +61,12 @@ public class Autor {
         this.apellido = apellido;
     }
 
-    public LocalDate getFechaNacimiento() {
-        return fechaNacimiento;
+    public List<Libro> getLibros() {
+        return libros;
     }
 
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
-
-    public String getNacionalidad() {
-        return nacionalidad;
-    }
-
-    public void setNacionalidad(String nacionalidad) {
-        this.nacionalidad = nacionalidad;
-    }
-
+    public void setLibros(List<Libro> libros) {
+        this.libros = libros;
 }
 
+}

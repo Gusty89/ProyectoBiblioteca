@@ -1,5 +1,21 @@
 const API_URL = 'http://localhost:8080/api/libros';
 
+//Obtener lista de libros
+export async function obtenerLibros() {
+  try {
+    const response = await fetch(`${API_URL}/listaLibros`);
+    if (!response.ok) {
+      throw new Error("Error al obtener autores");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error:", error);
+    return [];
+  }
+}
+
+
+
 // Obtener libro por ID
 export async function buscarPorId(id) {
   try {

@@ -28,12 +28,8 @@ public class LibroServiceImpl implements LibroService {
 
     @Override
     public List<Libro> obtenerLibros() {
-        List<Libro> libros = libroRepository.findAll();
-        if (libros.isEmpty()) {
-            throw new IllegalArgumentException("No se ha creado ningún libro.");
-        }
-        return libros;
-    }
+        return libroRepository.findAll();
+}
 
     @Override
     public Optional<Libro> obtenerPorId(Long id) {

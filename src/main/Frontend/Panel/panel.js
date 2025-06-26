@@ -21,7 +21,7 @@ document.getElementById('logout').addEventListener('click', () => {
   if (confirm('¿Deseas cerrar sesión?')) {
     // Limpiar sesión y redirigir
     alert('Sesión cerrada');
-    window.location.href = 'login.html';
+    window.location.href = '../Usuario/login.html';
   }
 });
 
@@ -29,7 +29,7 @@ document.getElementById('logout').addEventListener('click', () => {
 async function cargarVista(seccion) {
  switch (seccion) {
   case 'usuario':
-   const moduloUsuario = await import('./usuariocrud.js');
+   const moduloUsuario = await import('../Usuario/usuariocrud.js');
     vista.innerHTML = `
     <div id="buscarUsuarioContainer"></div>
     <div id="eliminarUsuarioContainer"></div>
@@ -45,11 +45,14 @@ async function cargarVista(seccion) {
     vista.innerHTML = `
     <div id="crearAutorContainer"></div>
     <div id="buscarAutorContainer"></div>
+    <div id="buscarListaAutorContainer"></div>
     <div id="actualizarAutorContainer"></div>
     <div id="eliminarAutorContainer"></div>
 `;
+    
     moduloAutor.renderCrearAutor(document.getElementById('crearAutorContainer'));
     moduloAutor.renderBuscarAutor(document.getElementById('buscarAutorContainer'));
+    moduloAutor.renderListarAutores(document.getElementById('buscarListaAutorContainer'));
     moduloAutor.renderActualizarAutor(document.getElementById('actualizarAutorContainer'));
     moduloAutor.renderEliminarAutor(document.getElementById('eliminarAutorContainer'));
     break;
@@ -58,11 +61,13 @@ async function cargarVista(seccion) {
     vista.innerHTML = `
     <div id="crearLibroContainer"></div>
     <div id="buscarLibroContainer"></div>
+    <div id="buscarListaLibrosContainer"></div>
     <div id="actualizarLibroContainer"></div>
     <div id="eliminarLibroContainer"></div>
 `;
     moduloLibro.renderCrearLibro(document.getElementById('crearLibroContainer'));
     moduloLibro.renderBuscarLibro(document.getElementById('buscarLibroContainer'));
+    moduloLibro.renderListarLibros(document.getElementById('buscarListaLibrosContainer'));
     moduloLibro.renderActualizarLibro(document.getElementById('actualizarLibroContainer'));
     moduloLibro.renderEliminarLibro(document.getElementById('eliminarLibroContainer'));
     break;

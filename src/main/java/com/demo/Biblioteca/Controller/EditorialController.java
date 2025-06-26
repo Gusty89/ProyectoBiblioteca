@@ -1,9 +1,9 @@
 package com.demo.Biblioteca.Controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demo.Biblioteca.Dto.EditorialDTO;
 import com.demo.Biblioteca.Model.Editorial;
 import com.demo.Biblioteca.Service.EditorialService;
 
@@ -28,15 +29,15 @@ public class EditorialController {
 
     //Método que devuelve toda la lista de editoriales
     @CrossOrigin(origins = "http://127.0.0.1:5501")
-    @GetMapping
-    public ResponseEntity<?> obtenerEditoriales() {
-    try {
+    @GetMapping("/listaEditoriales")
+    public ResponseEntity<List<EditorialDTO>> obtenerEditoriales() {
         List<Editorial> editoriales = editorialService.obtenerEditoriales();
-            return ResponseEntity.ok(editoriales);
-    }catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ningún autor: " + e.getMessage());
+        List<EditorialDTO> editorialesDto = editoriales.stream()
+                                         .map(EditorialDTO::fromEntity)
+                                         .collect(Collectors.toList());
+
+        return ResponseEntity.ok(editorialesDto);
     }
-}
 
 
     // Obtener editorial por ID

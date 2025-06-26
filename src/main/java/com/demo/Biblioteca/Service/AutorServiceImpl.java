@@ -19,13 +19,9 @@ public class AutorServiceImpl implements AutorService{
 
     @Override
     public List<Autor> obtenerAutores() {
-    List<Autor> autores = autorRepository.findAll();
-
-    if (autores.isEmpty()) {
-        throw new IllegalArgumentException("No se ha creado ningún autor");
-    }
-    return autores;
+        return autorRepository.findAll();
 }
+
     @Override
     public Optional<Autor> obtenerPorId(Long id) {
         return autorRepository.findById(id);

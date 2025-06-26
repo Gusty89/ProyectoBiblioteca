@@ -1,5 +1,21 @@
 const API_URL = 'http://localhost:8080/api/autores';
 
+//Obtener lista de autores
+export async function obtenerAutores() {
+  try {
+    const response = await fetch(`${API_URL}/listaAutores`);
+    if (!response.ok) {
+      throw new Error("Error al obtener autores");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error:", error);
+    return [];
+  }
+}
+
+
+
 // Obtener autor por ID
 export async function buscarPorId(id) {
   try {

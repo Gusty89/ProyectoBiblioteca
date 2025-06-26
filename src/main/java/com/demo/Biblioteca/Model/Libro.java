@@ -4,8 +4,6 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,9 +25,10 @@ public class Libro{
     private String titulo;
     @Column(name="anio", nullable= false)
     private String anio;
-    @Enumerated(EnumType.STRING)
+    
     @NotNull(message = "El estado del libro no puede ser nulo")
-    private EstadoLibro estado;
+    @Column(name="estado", nullable=false)
+    private String estado;
 
     //Un libro puede estar escrito por varios autores
     @ManyToMany
@@ -48,14 +47,7 @@ public class Libro{
 
     }
 
-    public enum EstadoLibro {
-    DISPONIBLE,
-    PRESTADO,
-    EN_REPARACION,
-    PERDIDO
-    }
-
-    public Libro(Long id, String titulo, List<Autor> autores,String anio, EstadoLibro estado, Editorial editorial, List<Prestamo> prestamos) {
+    public Libro(Long id, String titulo, List<Autor> autores,String anio, String estado, Editorial editorial, List<Prestamo> prestamos) {
         this.id = id;
         this.titulo = titulo;
         this.autores = autores;
@@ -98,11 +90,11 @@ public class Libro{
         this.anio = anio;
     }
 
-    public EstadoLibro getEstado() {
+    public String getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoLibro estado) {
+    public void setEstado(String estado) {
         this.estado = estado;
     }
 

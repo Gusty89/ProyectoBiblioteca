@@ -1,9 +1,9 @@
 package com.demo.Biblioteca.Controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demo.Biblioteca.Dto.LibroDTO;
 import com.demo.Biblioteca.Model.Libro;
 import com.demo.Biblioteca.Service.LibroService;
 
@@ -30,23 +31,23 @@ public class LibroController {
 
     // Obtener todos los libros
     @CrossOrigin(origins = "http://127.0.0.1:5501")
-    @GetMapping
-    public ResponseEntity<?> obtenerLibros() {
-    try {
+    @GetMapping("/listaLibros")
+    public ResponseEntity<List<LibroDTO>> obtenerLibros() {
         List<Libro> libros = libroService.obtenerLibros();
-            return ResponseEntity.ok(libros);
-    }catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ningún libro: " + e.getMessage());
+        List<LibroDTO> librosDto = libros.stream()
+                                         .map(LibroDTO::fromEntity)
+                                         .collect(Collectors.toList());
+
+        return ResponseEntity.ok(librosDto);
     }
-}
-
-
     // Obtener libro por ID
     @CrossOrigin(origins = "http://127.0.0.1:5501")
     @GetMapping("/{id}")
-    public Libro buscarPorId(@PathVariable Long id) {
-        return libroService.obtenerPorId(id)
+    public ResponseEntity<LibroDTO> buscarPorId(@PathVariable Long id) {
+        Libro libro = libroService.obtenerPorId(id)
                 .orElseThrow(() -> new EntityNotFoundException("Libro no encontrado con ID: " + id));
+
+        return ResponseEntity.ok(LibroDTO.fromEntity(libro));
     }
 
     // Crear un libro

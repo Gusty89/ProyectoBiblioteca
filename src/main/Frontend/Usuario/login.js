@@ -18,7 +18,7 @@ document.getElementById("formLogin").addEventListener("submit", async (e) => {
     icon: "success",
     confirmButtonText: "Ir al Panel"
   }).then(() => {
-    window.location.href = "panel.html";
+    window.location.href = "../Panel/panel.html";
   });
 } else {
   Swal.fire({

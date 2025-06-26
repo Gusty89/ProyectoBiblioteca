@@ -1,9 +1,45 @@
 import {
   crearAutor,
   buscarPorId,
+  obtenerAutores,
   actualizarAutor,
   eliminarAutor
 } from '../Autor/autorService.js';
+
+// ➕ Crear Autor
+export function renderCrearAutor(container) {
+  container.innerHTML = `
+    <h2>➕ Crear Autor</h2>
+    <form id="formCrearAutor" class="form-crear">
+      <label>Nombre:<br /><input type="text" id="nombreNuevoAutor" required /></label><br />
+      <label>Apellido:<br /><input type="text" id="apellidoNuevoAutor" /></label><br />
+      <button type="submit" class="formbold-btn">Registrar Autor</button>
+    </form>
+    <div id="mensajeCrearAutor"></div>
+  `;
+
+  document.getElementById("formCrearAutor").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const autor = {
+      nombre: document.getElementById("nombreNuevoAutor").value.trim(),
+      apellido: document.getElementById("apellidoNuevoAutor").value.trim(),
+    };
+
+    const mensaje = document.getElementById("mensajeCrearAutor");
+    mensaje.innerHTML = "";
+
+    try {
+      await crearAutor(autor);
+      mensaje.innerHTML = `<p class="success-message">✅ Autor registrado exitosamente.</p>`;
+      e.target.reset();
+    } catch (error) {
+      mensaje.innerHTML = `<p class="error-message">⚠️ Error al registrar autor: ${error.message}</p>`;
+    }
+  });
+}
+
+
 
 // 🔍 Buscar Autor
 export function renderBuscarAutor(container) {
@@ -40,53 +76,43 @@ export function renderBuscarAutor(container) {
   });
 }
 
-// 🗑️ Eliminar Autor
-export function renderEliminarAutor(container) {
+
+// 📋 Listar todos los autores
+export function renderListarAutores(container) {
   container.innerHTML = `
-    <h2>🗑️ Eliminar Autor</h2>
-    <form id="formEliminarAutor" class="form-busqueda">
-      <input type="number" id="buscarIdEliminarAutor" placeholder="Ingrese ID de autor" required />
-      <button type="submit">Buscar</button>
-    </form>
-    <div id="resultadoEliminarAutor"></div>
+    <h2>📋 Listado de Autores</h2>
+    <button id="btnCargarAutores" class="formbold-btn">Cargar Autores</button>
+    <div id="listaAutores" class="lista-entidades"></div>
   `;
 
-  document.getElementById("formEliminarAutor").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const id = document.getElementById("buscarIdEliminarAutor").value;
-    const resultado = document.getElementById("resultadoEliminarAutor");
-    resultado.innerHTML = "";
+  document.getElementById("btnCargarAutores").addEventListener("click", async () => {
+    const contenedorLista = document.getElementById("listaAutores");
+    contenedorLista.innerHTML = "";
 
-    const autor = await buscarPorId(id);
-    if (autor) {
-      resultado.innerHTML = `
-        <div class="user-card">
-          <div class="user-info">
-            <h3>${autor.nombre} ${autor.apellido || ""}</h3>
-            <p><strong>ID:</strong> ${autor.id}</p>
-            <button id="btnConfirmarEliminarAutor" class="formbold-btn" style="background-color:#e74c3c; margin-top:15px;">Eliminar Autor</button>
+    try {
+      const autores = await obtenerAutores();
+
+      if (autores.length === 0) {
+        contenedorLista.innerHTML = `<p class="error-message">⚠️ No hay autores registrados.</p>`;
+        return;
+      }
+
+      autores.forEach(autor => {
+        contenedorLista.innerHTML += `
+          <div class="user-card">
+            <div class="user-info">
+              <h3>${autor.nombre} ${autor.apellido || ""}</h3>
+              <p><strong>ID:</strong> ${autor.id}</p>
+            </div>
           </div>
-        </div>
-      `;
-
-      document.getElementById("btnConfirmarEliminarAutor").addEventListener("click", async () => {
-        const confirmar = confirm(`¿Deseas eliminar a ${autor.nombre} ${autor.apellido}?`);
-        if (!confirmar) return;
-
-        try {
-          await eliminarAutor(id);
-          resultado.innerHTML = `<p class="success-message">✅ Autor eliminado correctamente.</p>`;
-        } catch (error) {
-          resultado.innerHTML = `<p class="error-message">⚠️ Error al eliminar el autor: ${error.message}</p>`;
-        }
+        `;
       });
-    } else {
-      resultado.innerHTML = `<p class="error-message">⚠️ Autor no encontrado.</p>`;
+    } catch (error) {
+      contenedorLista.innerHTML = `<p class="error-message">⚠️ Error al obtener autores: ${error.message}</p>`;
     }
-
-    e.target.reset();
   });
 }
+
 
 // ✏️ Actualizar Autor
 export function renderActualizarAutor(container) {
@@ -147,36 +173,51 @@ export function renderActualizarAutor(container) {
   });
 }
 
-
-// ➕ Crear Autor
-export function renderCrearAutor(container) {
+// 🗑️ Eliminar Autor
+export function renderEliminarAutor(container) {
   container.innerHTML = `
-    <h2>➕ Crear Autor</h2>
-    <form id="formCrearAutor" class="form-crear">
-      <label>Nombre:<br /><input type="text" id="nombreNuevoAutor" required /></label><br />
-      <label>Apellido:<br /><input type="text" id="apellidoNuevoAutor" /></label><br />
-      <button type="submit" class="formbold-btn">Registrar Autor</button>
+    <h2>🗑️ Eliminar Autor</h2>
+    <form id="formEliminarAutor" class="form-busqueda">
+      <input type="number" id="buscarIdEliminarAutor" placeholder="Ingrese ID de autor" required />
+      <button type="submit">Buscar</button>
     </form>
-    <div id="mensajeCrearAutor"></div>
+    <div id="resultadoEliminarAutor"></div>
   `;
 
-  document.getElementById("formCrearAutor").addEventListener("submit", async (e) => {
+  document.getElementById("formEliminarAutor").addEventListener("submit", async (e) => {
     e.preventDefault();
+    const id = document.getElementById("buscarIdEliminarAutor").value;
+    const resultado = document.getElementById("resultadoEliminarAutor");
+    resultado.innerHTML = "";
 
-    const autor = {
-      nombre: document.getElementById("nombreNuevoAutor").value.trim(),
-      apellido: document.getElementById("apellidoNuevoAutor").value.trim(),
-    };
+    const autor = await buscarPorId(id);
+    if (autor) {
+      resultado.innerHTML = `
+        <div class="user-card">
+          <div class="user-info">
+            <h3>${autor.nombre} ${autor.apellido || ""}</h3>
+            <p><strong>ID:</strong> ${autor.id}</p>
+            <button id="btnConfirmarEliminarAutor" class="formbold-btn" style="background-color:#e74c3c; margin-top:15px;">Eliminar Autor</button>
+          </div>
+        </div>
+      `;
 
-    const mensaje = document.getElementById("mensajeCrearAutor");
-    mensaje.innerHTML = "";
+      document.getElementById("btnConfirmarEliminarAutor").addEventListener("click", async () => {
+        const confirmar = confirm(`¿Deseas eliminar a ${autor.nombre} ${autor.apellido}?`);
+        if (!confirmar) return;
 
-    try {
-      await crearAutor(autor);
-      mensaje.innerHTML = `<p class="success-message">✅ Autor registrado exitosamente.</p>`;
-      e.target.reset();
-    } catch (error) {
-      mensaje.innerHTML = `<p class="error-message">⚠️ Error al registrar autor: ${error.message}</p>`;
+        try {
+          await eliminarAutor(id);
+          resultado.innerHTML = `<p class="success-message">✅ Autor eliminado correctamente.</p>`;
+        } catch (error) {
+          resultado.innerHTML = `<p class="error-message">⚠️ Error al eliminar el autor: ${error.message}</p>`;
+        }
+      });
+    } else {
+      resultado.innerHTML = `<p class="error-message">⚠️ Autor no encontrado.</p>`;
     }
+
+    e.target.reset();
   });
 }
+

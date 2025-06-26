@@ -1,5 +1,3 @@
-import { renderBuscarUsuario, renderEliminarUsuario, renderActualizarUsuario } from './usuariocrud.js';
-
 const vista = document.getElementById('vista-actual');
 
 const secciones = {
@@ -43,7 +41,31 @@ async function cargarVista(seccion) {
     break;
 
     case 'autor':
+      const moduloAutor = await import('../Autor/autorcrud.js');
+    vista.innerHTML = `
+    <div id="crearAutorContainer"></div>
+    <div id="buscarAutorContainer"></div>
+    <div id="actualizarAutorContainer"></div>
+    <div id="eliminarAutorContainer"></div>
+`;
+    moduloAutor.renderCrearAutor(document.getElementById('crearAutorContainer'));
+    moduloAutor.renderBuscarAutor(document.getElementById('buscarAutorContainer'));
+    moduloAutor.renderActualizarAutor(document.getElementById('actualizarAutorContainer'));
+    moduloAutor.renderEliminarAutor(document.getElementById('eliminarAutorContainer'));
+    break;
     case 'libro':
+      const moduloLibro = await import('../Libro/librocrud.js');
+    vista.innerHTML = `
+    <div id="crearLibroContainer"></div>
+    <div id="buscarLibroContainer"></div>
+    <div id="actualizarLibroContainer"></div>
+    <div id="eliminarLibroContainer"></div>
+`;
+    moduloLibro.renderCrearLibro(document.getElementById('crearLibroContainer'));
+    moduloLibro.renderBuscarLibro(document.getElementById('buscarLibroContainer'));
+    moduloLibro.renderActualizarLibro(document.getElementById('actualizarLibroContainer'));
+    moduloLibro.renderEliminarLibro(document.getElementById('eliminarLibroContainer'));
+    break;
     case 'editorial':
     case 'prestamo':
       vista.innerHTML = `

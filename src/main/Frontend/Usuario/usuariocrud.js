@@ -121,7 +121,6 @@ export function renderActualizarUsuario(container) {
           <label>Apellido:<br /><input type="text" id="apellidoActualizarUsuario" value="${user.apellido}" required /></label><br />
           <label>Email:<br /><input type="email" id="emailActualizarUsuario" value="${user.email}" required /></label><br />
           <label>Teléfono:<br /><input type="text" id="telefonoActualizarUsuario" value="${user.telefono}" /></label><br />
-          <label>Dirección:<br /><input type="text" id="direccionActualizarUsuario" value="${user.direccion}" /></label><br />
           <button type="submit" class="formbold-btn" style="margin-top:15px;">Actualizar Usuario</button>
         </form>
         <div id="mensajeActualizarUsuario"></div>
@@ -135,8 +134,7 @@ export function renderActualizarUsuario(container) {
           nombre: document.getElementById("nombreActualizarUsuario").value.trim(),
           apellido: document.getElementById("apellidoActualizarUsuario").value.trim(),
           email: document.getElementById("emailActualizarUsuario").value.trim(),
-          telefono: document.getElementById("telefonoActualizarUsuario").value.trim(),
-          direccion: document.getElementById("direccionActualizarUsuario").value.trim(),
+          telefono: document.getElementById("telefonoActualizarUsuario").value.trim()
         };
         await actualizarUsuario(usuarioActualizado);
         const mensaje = document.getElementById("mensajeActualizarUsuario");
@@ -154,6 +152,5 @@ export function renderActualizarUsuario(container) {
       resultado.innerHTML = `<p class="error-message">⚠️ Error: ${error.message}</p>`;
     }
 
-    
   });
 }

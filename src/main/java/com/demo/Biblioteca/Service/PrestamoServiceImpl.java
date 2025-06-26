@@ -1,103 +1,75 @@
 package com.demo.Biblioteca.Service;
 
-import java.util.List;
-
+import com.demo.Biblioteca.Model.Prestamo;
+import com.demo.Biblioteca.Repository.PrestamoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import jakarta.persistence.EntityNotFoundException;
 
-import com.demo.Biblioteca.Model.Libro;
-import com.demo.Biblioteca.Model.Prestamo;
-import com.demo.Biblioteca.Model.Usuario;
-import com.demo.Biblioteca.Repository.LibroRepository;
-import com.demo.Biblioteca.Repository.PrestamoRepository;
-import com.demo.Biblioteca.Repository.UsuarioRepository;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @Service
-public class PrestamoServiceImpl implements PrestamoService{
+public class PrestamoServiceImpl implements PrestamoService {
 
     @Autowired
     private PrestamoRepository prestamoRepository;
 
-    private UsuarioRepository usuarioRepository;
-
-    private LibroRepository libroRepository;
-
-
-    //Método para obtener una lista de prestamos (GET)
     @Override
     public List<Prestamo> listarPrestamos() {
         return prestamoRepository.findAll();
     }
 
-    //Valida si se ha encontrado un prestamo por id (GET)
     @Override
-    public Prestamo buscarPorId(Long id) {
-        return prestamoRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Préstamo no encontrado"));
+    public Optional<Prestamo> buscarPorId(Long id) {
+        return prestamoRepository.findById(id);
     }
-    
-    //Valida la obtencion de un prestamo, antes de guardarlo (POST)
-    // Buscar el usuario por ID
+
     @Override
-    public Prestamo guardarPrestamo(Prestamo prestamo){
-    // Buscar el usuario por ID
-    Usuario usuario = usuarioRepository.findById(prestamo.getUsuario().getId())
-        .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+    public Prestamo guardarPrestamo(Prestamo prestamo) {
+        validarPrestamo(prestamo);
+        return prestamoRepository.save(prestamo);
+    }
 
-    // Buscar el libro por ID
-    Libro libro = libroRepository.findById(prestamo.getLibro().getId())
-        .orElseThrow(() -> new EntityNotFoundException("Libro no encontrado"));
-
-    // Asignar al préstamo
-    prestamo.setUsuario(usuario);
-    prestamo.setLibro(libro);
-
-    // Guardar préstamo
-    return prestamoRepository.save(prestamo);
-}
-    //Valida si se actualizó correctamente un prestamo (PUT)
     @Override
     public Prestamo actualizar(Long id, Prestamo prestamoActualizado) {
-    Prestamo prestamo = buscarPorId(id);
+        Prestamo prestamoExistente = prestamoRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Préstamo no encontrado con ID: " + id));
 
-    if (prestamo.getEstado() == Prestamo.EstadoPrestamo.DEVUELTO) {
-        throw new IllegalStateException("No se puede modificar un préstamo ya devuelto.");
+        validarPrestamo(prestamoActualizado);
+
+        prestamoExistente.setFechaPrestamo(prestamoActualizado.getFechaPrestamo());
+        prestamoExistente.setFechaDevolucion(prestamoActualizado.getFechaDevolucion());
+        prestamoExistente.setEstado(prestamoActualizado.getEstado());
+
+        return prestamoRepository.save(prestamoExistente);
     }
 
-    if (prestamoActualizado.getFechaPrestamo().isAfter(prestamoActualizado.getFechaDevolucion())) {
-        throw new IllegalArgumentException("La fecha de préstamo no puede ser posterior a la de devolución.");
-    }
-
-    prestamo.setFechaPrestamo(prestamoActualizado.getFechaPrestamo());
-    prestamo.setFechaDevolucion(prestamoActualizado.getFechaDevolucion());
-    prestamo.setUsuario(prestamoActualizado.getUsuario());
-    prestamo.setLibro(prestamoActualizado.getLibro());
-    prestamo.setEstado(prestamoActualizado.getEstado()); // opcional, si querés permitirlo
-
-    return prestamoRepository.save(prestamo);
-}
-
-
-    //Valida si un prestamo fue devuelto (PUT)
     @Override
-    public Prestamo fueDevuelto(Long id) {
-    Prestamo prestamo = buscarPorId(id); //ya lanza excepción si no existe
-
-    if (prestamo.getEstado() == Prestamo.EstadoPrestamo.DEVUELTO) {
-        throw new IllegalStateException("Este préstamo ya fue devuelto.");
+    public void eliminar(Long id) {
+        if (!prestamoRepository.existsById(id)) {
+            throw new EntityNotFoundException("Préstamo no encontrado con ID: " + id);
+        }
+        prestamoRepository.deleteById(id);
     }
+    
+    public void validarPrestamo(Prestamo prestamo) {
+        if (prestamo.getFechaPrestamo() == null) {
+            throw new IllegalArgumentException("La fecha de préstamo es obligatoria.");
+        }
 
-    prestamo.setEstado(Prestamo.EstadoPrestamo.DEVUELTO);
-    return prestamoRepository.save(prestamo);
-    }
+        if (prestamo.getFechaPrestamo().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("La fecha de préstamo no puede ser en el futuro.");
+        }
 
-    //Valida si el prestamo puede eliminarse (DELETE)
-    @Override
-    public void eliminarPrestamo(Long id) {
-        Prestamo prestamo = prestamoRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Préstamo no encontrado"));
+        if (prestamo.getFechaDevolucion() != null &&
+            prestamo.getFechaDevolucion().isBefore(prestamo.getFechaPrestamo())) {
+            throw new IllegalArgumentException("La fecha de devolución no puede ser anterior a la de préstamo.");
+        }
 
-    prestamoRepository.delete(prestamo);
+        if (prestamo.getEstado() == null) {
+            throw new IllegalArgumentException("El estado del préstamo es obligatorio.");
+        }
     }
 }

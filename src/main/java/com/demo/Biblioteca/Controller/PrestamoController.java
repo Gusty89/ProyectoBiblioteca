@@ -2,6 +2,7 @@ package com.demo.Biblioteca.Controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,9 +42,9 @@ public class PrestamoController {
     // Obtener préstamo por id
     @CrossOrigin(origins = "http://127.0.0.1:5501")
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPrestamo(@PathVariable Long id) {
+    public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
         try {
-            Prestamo prestamo = prestamoService.buscarPorId(id);
+            Optional<Prestamo> prestamo = prestamoService.buscarPorId(id);
             return ResponseEntity.ok(prestamo);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -56,7 +57,7 @@ public class PrestamoController {
 
     // Crear nuevo préstamo
     @CrossOrigin(origins = "http://127.0.0.1:5501")
-    @PostMapping
+    @PostMapping("/crearPrestamo")
     public ResponseEntity<?> crearPrestamo(@RequestBody Prestamo prestamo) {
         try {
             Prestamo nuevo = prestamoService.guardarPrestamo(prestamo);
@@ -86,31 +87,12 @@ public class PrestamoController {
         }
     }
 
-    // Marcar préstamo como devuelto
-    @CrossOrigin(origins = "http://127.0.0.1:5501")
-    @PutMapping("/{id}/devolucion")
-    public ResponseEntity<?> devolucion(@PathVariable Long id) {
-        try {
-            Prestamo prestamo = prestamoService.fueDevuelto(id);
-            return ResponseEntity.ok(prestamo);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("El préstamo ya fue devuelto anteriormente.");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Préstamo con ID " + id + " no encontrado.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error inesperado: " + e.getMessage());
-        }
-    }
-
     // Eliminar préstamo por id
     @CrossOrigin(origins = "http://127.0.0.1:5501")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarPorId(@PathVariable Long id) {
         try {
-            prestamoService.eliminarPrestamo(id);
+            prestamoService.eliminar(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
